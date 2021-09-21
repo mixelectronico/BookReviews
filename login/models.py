@@ -73,14 +73,13 @@ class Libro(models.Model):
     id = models.AutoField(primary_key=True)
     titulo = models.CharField(max_length=40)
     autor = models.ForeignKey(Autor, on_delete=CASCADE, related_name="libros")
-    rating = models.IntegerField(default=0)
 
 
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
-    usuario = models.ForeignKey(User, on_delete=CASCADE, related_name="reviewer")
+    usuario = models.ForeignKey(User, on_delete=CASCADE, related_name="reviews")
     contenido = models.TextField(default='')
-    libro = models.ForeignKey(Libro, on_delete=CASCADE, related_name="libros")
+    libro = models.ForeignKey(Libro, on_delete=CASCADE, related_name="reviews")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+    rating = models.IntegerField(default=0)

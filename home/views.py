@@ -10,7 +10,8 @@ def libros(request):
     
     context = {
         "active_user": User.objects.get(id=request.session['user_id']),
-        "lista_libros": Libro.objects.all(),
+        "ultimos_reviews": Libro.objects.all().order_by('id').reverse(),  #.order_by('-id)[:3],
+        "lista_libros": Libro.objects.all().order_by('titulo'),
     }
 
     return render(request, 'libros.html', context)
