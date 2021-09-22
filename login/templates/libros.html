@@ -22,7 +22,7 @@
                 <!-- Last 3 Reviews -->
                 <div class="col-7">
                     {% for libro in ultimos_reviews %}
-                    <a href="">
+                    <a href="/libros/{{libro.id}}">
                         <h6>{{libro.titulo}}</h6>
                     </a>
                     <ul class="list-group">
@@ -37,9 +37,8 @@
                 <div class="col-5">
                     <h4 class="mb-3">Otros libros con reseñas:</h4>
                     <div class="h-auto w-100 border border-ligth py-2 px-2 bg-light text-dark overflow-auto">
-                        <!--ciclo for-->
                         {% for libro in lista_libros %}
-                        <a href="">
+                        <a href="/libros/{{libro.id}}">
                             <p><ins>{{libro.titulo}}</ins></p>
                         </a>
                         {% endfor %}

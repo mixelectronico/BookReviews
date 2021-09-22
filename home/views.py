@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from login.models import User, Autor, Libro, Review
+from django.db.models import Count
 
 
 # Create your views here.
@@ -10,7 +11,7 @@ def libros(request):
     
     context = {
         "active_user": User.objects.get(id=request.session['user_id']),
-        "ultimos_reviews": Libro.objects.all().order_by('id').reverse(),  #.order_by('-id)[:3],
+        "ultimos_reviews": Libro.objects.all().order_by('id').reverse()[:3],  #.order_by('-id)[:3],
         "lista_libros": Libro.objects.all().order_by('titulo'),
     }
 
@@ -57,8 +58,8 @@ def insertar(request):
                 autor = Autor.objects.get(id=registered_author)
             else:
                 autor = Autor.objects.create(nombre=request.POST['autor'].capitalize())
-        book = Libro.objects.create(titulo = request.POST['titulo'], autor = autor, rating = request.POST['rating'])
-        Review.objects.create(usuario = User.objects.get(id=request.session['user_id']), contenido = request.POST['review'], libro = book)
+        book = Libro.objects.create(titulo = request.POST['titulo'], autor = autor)
+        Review.objects.create(usuario = User.objects.get(id=request.session['user_id']), contenido = request.POST['review'], libro = book, rating = request.POST['rating'])
         return redirect('libros')
 
 def recuperar(request):
@@ -80,3 +81,34 @@ def cambiar_pass(request):
         "active_user": reg_user,
     }
     return render(request, 'recuperar.html', context)
+
+def book_reviews(request, libro_id):
+    context = {
+        'libro': Libro.objects.get(id = libro_id),
+        'reviews': Review.objects.filter(libro = Libro.objects.get(id = libro_id)).order_by('-id'),
+    }
+    return render(request, 'libro.html', context)
+
+def add_review(request):
+    review = Review.objects.create(
+        usuario = User.objects.get(id=request.session['user_id']),
+        contenido = request.POST['review'],
+        libro = Libro.objects.get(id = request.POST['libro_id']),
+        rating = request.POST['rating']
+    )
+    return redirect(f"/libros/{request.POST['libro_id']}")
+
+def user_reviews(request, user_id):
+    usuario = User.objects.get(id = user_id)
+    dict_review = Review.objects.filter(usuario = usuario).values('libro').annotate(total=Count('libro'))
+    arreglo_libros = []
+    for rev in dict_review:
+        arreglo_libros.append(
+            Libro.objects.filter(id = rev['libro'])
+        )
+    context = {
+        'user': usuario,
+        'rev_count': Review.objects.filter(usuario = usuario).count(),
+        'reviews': arreglo_libros,
+            }
+    return render(request, 'user.html', context)
