@@ -8,5 +8,4 @@ urlpatterns = [
     path('recuperar/', views.recuperar, name='recuperar'),
     path('<int:libro_id>/', views.book_reviews, name='book_reviews'),
     path('add_review/', views.add_review, name='add_review'),
-    path('users/<int:user_id>', views.user_reviews, name='user_reviews'),
 ]

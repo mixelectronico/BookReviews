@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from login.models import User, Autor, Libro, Review
-from django.db.models import Count
 
 
 # Create your views here.
@@ -97,18 +96,3 @@ def add_review(request):
         rating = request.POST['rating']
     )
     return redirect(f"/libros/{request.POST['libro_id']}")
-
-def user_reviews(request, user_id):
-    usuario = User.objects.get(id = user_id)
-    dict_review = Review.objects.filter(usuario = usuario).values('libro').annotate(total=Count('libro'))
-    arreglo_libros = []
-    for rev in dict_review:
-        arreglo_libros.append(
-            Libro.objects.filter(id = rev['libro'])
-        )
-    context = {
-        'user': usuario,
-        'rev_count': Review.objects.filter(usuario = usuario).count(),
-        'reviews': arreglo_libros,
-            }
-    return render(request, 'user.html', context)

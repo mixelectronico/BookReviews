@@ -26,6 +26,7 @@ SECRET_KEY = '0h**gr=@0lpc32a_sn*&r43&r_00!a$vs77rij!eem03-#+_h0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+#ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['18.224.200.204']
 
 

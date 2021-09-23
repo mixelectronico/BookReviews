@@ -15,7 +15,7 @@
         <div class="header">
 
         </div>
-        <br>
+        <br />
         <div class="container-fluid">
             <div class="row mx-5">
 
@@ -27,7 +27,7 @@
                     </a>
                     <ul class="list-group">
                         <li class="list-group-item">Rating: {{libro.reviews.last.rating}}</li>
-                        <li class="list-group-item">{{libro.reviews.last.usuario.nombre}} - {{libro.reviews.last.contenido}}</li>
+                        <li class="list-group-item"><a href="/users/{{libro.reviews.last.usuario.id}}">{{libro.reviews.last.usuario.nombre}}</a> - {{libro.reviews.last.contenido}}</li>
                         <li class="list-group-item">{{libro.reviews.last.updated_at}}</li>
                     </ul>
                     <br /> {% endfor%}

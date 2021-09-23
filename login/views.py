@@ -1,9 +1,10 @@
+from django.db.models.aggregates import Count
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from time import gmtime, strftime
 import bcrypt
 
-from .models import User
+from .models import Libro, Review, User
 
 # Create your views here.
 def login(request):
@@ -61,3 +62,18 @@ def registro(request):
 def logout(request):
     request.session.flush()
     return redirect('/')
+
+def user_reviews(request, user_id):
+    usuario = User.objects.get(id = user_id)
+    dict_review = Review.objects.filter(usuario = usuario).values('libro').annotate(total=Count('libro'))
+    arreglo_libros = []
+    for rev in dict_review:
+        arreglo_libros.append(
+            Libro.objects.filter(id = rev['libro'])
+        )
+    context = {
+        'user': usuario,
+        'rev_count': Review.objects.filter(usuario = usuario).count(),
+        'reviews': arreglo_libros,
+            }
+    return render(request, 'user.html', context)
